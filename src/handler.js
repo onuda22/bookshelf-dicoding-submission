@@ -76,4 +76,20 @@ const saveBookHandler = (request, h) => {
   return response;
 };
 
-module.exports = saveBookHandler;
+const getAllBooksHandler = (request, h) => {
+  const getAllBooksDTO = books.map(({ id, name, publisher }) => ({
+    id,
+    name,
+    publisher,
+  }));
+  const response = h.response({
+    status: 'success',
+    data: {
+      books: getAllBooksDTO,
+    },
+  });
+  response.code(200);
+  return response;
+};
+
+module.exports = { saveBookHandler, getAllBooksHandler };
