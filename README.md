@@ -77,6 +77,6 @@ Proyek ini dilisensikan di bawah [MIT License](LICENSE).
 
 ## Kontak
 
-Nama Anda - [Email](mailto:okinabada@gmail.com)  
+Oki Nurul A - [Email](mailto:okinabada@gmail.com)  
 LinkedIn: [Profil LinkedIn](https://www.linkedin.com/in/oki-nurul-abada-2b0690233/)  
 GitHub: [username](https://github.com/onuda22)
