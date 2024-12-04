@@ -13,22 +13,15 @@ const saveBookHandler = (request, h) => {
     reading,
   } = request.payload;
 
-  if (!name || name.trim() === '') {
-    const response = h.response({
-      status: 'fail',
-      message: 'Gagal menambahkan buku. Mohon isi nama buku',
-    });
-    response.code(400);
-    return response;
-  }
+  const method = 'menambahkan';
 
-  if (readPage > pageCount) {
+  const validationError = validateBookPayload({ method, ...request.payload });
+  if (validationError) {
     const response = h.response({
-      status: 'fail',
-      message:
-        'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+      status: validationError.status,
+      message: validationError.message,
     });
-    response.code(400);
+    response.code(validationError.code);
     return response;
   }
 
@@ -115,8 +108,103 @@ const getOneBookDetailHandler = (request, h) => {
   return response;
 };
 
+/**
+ * Edit Book By Id
+ * @param {name, year, author, summary, publisher, pageCount, readPage, reading} request
+ * @param {bookId} h
+ * @returns response
+ */
+
+const editBookByIdHandler = (request, h) => {
+  try {
+    const { bookId } = request.params;
+
+    const index = books.findIndex((book) => book.id === bookId);
+
+    if (index === -1) {
+      const response = h.response({
+        status: 'fail',
+        message: 'Gagal memperbarui buku. Id tidak ditemukan',
+      });
+      response.code(404);
+      return response;
+    }
+
+    const {
+      name,
+      year,
+      author,
+      summary,
+      publisher,
+      pageCount,
+      readPage,
+      reading,
+    } = request.payload;
+    const updatedAt = new Date().toISOString();
+    const method = 'memperbarui';
+
+    const validationError = validateBookPayload({ method, ...request.payload });
+    if (validationError) {
+      const response = h.response({
+        status: validationError.status,
+        message: validationError.message,
+      });
+      response.code(validationError.code);
+      return response;
+    }
+
+    books[index] = {
+      ...books[index],
+      name,
+      year,
+      author,
+      summary,
+      publisher,
+      pageCount,
+      readPage,
+      reading,
+      updatedAt,
+    };
+
+    const response = h.response({
+      status: 'success',
+      message: 'Buku berhasil diperbarui',
+    });
+    response.code(200);
+    return response;
+  } catch (error) {
+    const response = h.response({
+      status: 'error',
+      message: `Terjadi kesalahan pada server ${error}`,
+    });
+    response.code(500);
+    return response;
+  }
+};
+
+const validateBookPayload = ({ method, name, readPage, pageCount }) => {
+  if (!name || name.trim() === '') {
+    return {
+      status: 'fail',
+      message: `Gagal ${method} buku. Mohon isi nama buku`,
+      code: 400,
+    };
+  }
+
+  if (readPage > pageCount) {
+    return {
+      status: 'fail',
+      message: `Gagal ${method} buku. readPage tidak boleh lebih besar dari pageCount`,
+      code: 400,
+    };
+  }
+
+  return null;
+};
+
 module.exports = {
   saveBookHandler,
   getAllBooksHandler,
   getOneBookDetailHandler,
+  editBookByIdHandler,
 };
