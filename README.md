@@ -27,6 +27,8 @@ Proyek ini adalah backend REST API untuk mengelola sistem manajemen inventaris b
 - Get All Books
 - Get Book Detail by ID
 - Edit Book in the bookshelf
+- Delete Book from the bookshelf
+- Search Book filtered by Name, isReading, isFinished
 
 ## Teknologi yang Digunakan
 
